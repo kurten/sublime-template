@@ -10,6 +10,7 @@ import os
 import sublime
 import sublime_plugin
 import datetime
+import sys
 
 settings = sublime.load_settings("Preferences.sublime-settings")
 
@@ -38,7 +39,8 @@ class SublimeTemplateCommand(sublime_plugin.WindowCommand):
     #get template content from template file
     def get_content(self, file_name, ext):
         template = "./templates/" + settings.get('sublime_template_template', 'template') + ext
-        if os.path.exists(template):
+        print sys.path.append(os.path.abspath(__file__))
+        try:
             file = open(template)
             lines = file.readlines()
             file.close()
@@ -61,6 +63,8 @@ class SublimeTemplateCommand(sublime_plugin.WindowCommand):
             content = content.replace('%HERE%', '')
             return content, here
 
+        except IOError as e:
+            print "I/O error({0}): {1}".format(e.errno, e.strerror)
         return "", 0
 
         

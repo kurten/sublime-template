@@ -50,30 +50,30 @@ Variables in templates
 
 The following variables will be expanded in templates:
 
-``%DAY%``, ``%YEAR%``, ``%MONTH%``
-    Numerical day of the month, year and month.
-``%DATE%``
-    Date in ``YYYY-mm-dd`` format
-``%TIME%``
-    Time in ``HH:MM`` format
-``%FDATE``
-    Full date (date + time), in ``YYYY-mm-dd HH:MM`` format.
-``%FILE%``
-    File name, without extension.
-``%FFILE%``
-    File name, with extension.
-``%MAIL%``
-    Current user's e-mail address. May be overriden by defining ``g:email``.
+``%DAY%``, ``%YEAR%``, ``%MONTH%``  <br>
+    Numerical day of the month, year and month.<br>
+``%DATE%``<br>
+    Date in ``YYYY-mm-dd`` format<br>
+``%TIME%``<br>
+    Time in ``HH:MM`` format<br>
+``%FDATE``<br>
+    Full date (date + time), in ``YYYY-mm-dd HH:MM`` format.<br>
+``%FILE%``<br>
+    File name, without extension.<br>
+``%FFILE%``<br>
+    File name, with extension.<br>
+``%MAIL%``<br>
+    Current user's e-mail address. May be overriden by defining ``sublime_template_email``.<br>
 ``%USER%``
-    Current logged-in user name. May be overriden by defining ``g:username``.
-``%HOST%``
-    Host name.
-``%GUARD%``
+    Current logged-in user name. May be overriden by defining ``sublime_template_user``.<br>
+``%HOST%``<br>
+    Host name.<br>
+``%GUARD%``<br>
     A string with alphanumeric characters and underscores, suitable for use
-    in proprocessor guards for C/C++/Objective-C header files.
-``%HERE%``
+    in proprocessor guards for C/C++/Objective-C header files.<br>
+``%HERE%``<br>
     Expands to nothing, but ensures that the cursor will be placed in its
-    position after expanding the template.
+    position after expanding the template.<br>
 
 
 Thanks to [aperezdc](https://github.com/aperezdc/vim-template/)，I use his vim-template projects template files.
