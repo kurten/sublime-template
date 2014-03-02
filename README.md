@@ -10,6 +10,7 @@ like guards in C/C++ headers, or license disclaimers.
 
 Installation
 ============
+Can't change sublime-template to other name.
 
 1. ``cd Sublime Text 2/Packages/``
 

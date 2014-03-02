@@ -38,8 +38,8 @@ class SublimeTemplateCommand(sublime_plugin.WindowCommand):
     
     #get template content from template file
     def get_content(self, file_name, ext):
-        template = "./templates/" + settings.get('sublime_template_template', 'template') + ext
-        print sys.path.append(os.path.abspath(__file__))
+        template = sublime.packages_path() + "/sublime-template/templates/"
+        template = template + settings.get('sublime_template_template', 'template') + ext
         try:
             file = open(template)
             lines = file.readlines()
