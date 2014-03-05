@@ -12,8 +12,6 @@ import sublime_plugin
 import datetime
 import sys
 
-settings = sublime.load_settings("Preferences.sublime-settings")
-
 def get_time(format):
     return datetime.datetime.now().strftime(format)
 
@@ -27,7 +25,7 @@ class SublimeTemplateCommand(sublime_plugin.WindowCommand):
     def on_done(self, text, edit=None):
         if text == "":
             return
-        
+        print(text)
         file_name, ext = os.path.splitext(text)
         view = self.window.new_file()
         view.set_name(text)
@@ -38,6 +36,7 @@ class SublimeTemplateCommand(sublime_plugin.WindowCommand):
     
     #get template content from template file
     def get_content(self, file_name, ext):
+        settings = sublime.load_settings("Preferences.sublime-settings")
         template = sublime.packages_path() + "/sublime-template/templates/"
         template = template + settings.get('sublime_template_template', 'template') + ext
         try:
