@@ -11,6 +11,7 @@ import sublime
 import sublime_plugin
 import datetime
 import sys
+import os
 
 def get_time(format):
     return datetime.datetime.now().strftime(format)
@@ -25,12 +26,23 @@ class SublimeTemplateCommand(sublime_plugin.WindowCommand):
     def on_done(self, text, edit=None):
         if text == "":
             return
-        print(text)
+
         file_name, ext = os.path.splitext(text)
         view = self.window.new_file()
         view.set_name(text)
         content, here = self.get_content(file_name, ext)
         view.run_command("insert_snippet", { "contents": "%s" %  content })  #insert content
+        try:
+            syntax_file = sublime.packages_path() + '/sublime-template/template_syntax_map.json'
+            file = open(syntax_file)
+            import json
+            data = json.load(file);
+            if ext in data:
+                syntax = data.get(ext)
+                view.set_syntax_file(syntax)
+            file.close()
+        except IOError as e:
+            print(e.strerror)
         view.sel().clear()  #clear all region
         view.sel().add(sublime.Region(here, here))  #set cursor to here
     
@@ -40,6 +52,8 @@ class SublimeTemplateCommand(sublime_plugin.WindowCommand):
         template = sublime.packages_path() + "/sublime-template/templates/"
         template = template + settings.get('sublime_template_template', 'template') + ext
         try:
+            if os.path.exists(template) == False:
+                return "", 0
             file = open(template)
             lines = file.readlines()
             file.close()
