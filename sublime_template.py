@@ -19,18 +19,48 @@ def get_time(format):
 
 # New File With Template Command
 class SublimeTemplateCommand(sublime_plugin.WindowCommand):
-    def run(self):
-        self.window.show_input_panel("File name with ext:", "",
-                                         self.on_done, None, None)
+    def run(self, paths = [], name = ""):
+        import functools
+		
+        # self.window.run_command('hide_panel')
+        self.window.show_input_panel("File name with ext:", name,
+                                         functools.partial(self.on_done, paths), None, None)
     #after input done callback
-    def on_done(self, text, edit=None):
+    def on_done(self, paths, text):
         if text == "":
             return
 
         file_name, ext = os.path.splitext(text)
+        content, here = self.get_content(file_name, ext)
+        if paths:
+            self.create_local(paths[0], text, content, here)
+        else:
+            self.create_temp(ext, text, content, here)
+
+    #create local file with template and open it
+    def create_local(self, folder, text, content, here):
+        path = os.path.join(folder, text);
+        if os.path.exists(path):
+            sublime.error_message("Unable to create file, file or folder exists.")
+            return
+        try:
+            f = open(path, 'w+', encoding='utf8', newline='')
+            f.write(str(content))
+            f.close()
+        except e:
+            print(e.message)
+            sublime.error_message("Unable to create file: "+path)
+            return
+
+        view = sublime.active_window().open_file(path)
+        view.settings().set('open_with_edit', True);
+        view.sel().clear()  #clear all region
+        view.sel().add(sublime.Region(here, here))  #set cursor to here
+
+    #create temp file with template
+    def create_temp(self, ext, text, content, here):
         view = self.window.new_file()
         view.set_name(text)
-        content, here = self.get_content(file_name, ext)
         view.run_command("insert_snippet", { "contents": "%s" %  content })  #insert content
         try:
             syntax_file = sublime.packages_path() + '/sublime-template/template_syntax_map.json'
@@ -45,7 +75,7 @@ class SublimeTemplateCommand(sublime_plugin.WindowCommand):
             print(e.strerror)
         view.sel().clear()  #clear all region
         view.sel().add(sublime.Region(here, here))  #set cursor to here
-    
+
     #get template content from template file
     def get_content(self, file_name, ext):
         settings = sublime.load_settings("Preferences.sublime-settings")
@@ -79,5 +109,12 @@ class SublimeTemplateCommand(sublime_plugin.WindowCommand):
         except IOError as e:
             print("file not found:" + e.strerror)
         return "", 0
+
+    def refresh(self):
+        try:
+            sublime.set_timeout(lambda:sublime.active_window().run_command('refresh_folder_list'), 200);
+            sublime.set_timeout(lambda:sublime.active_window().run_command('refresh_folder_list'), 1300);
+        except:
+            pass
 
         
